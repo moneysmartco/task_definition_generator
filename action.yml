@@ -1,0 +1,15 @@
+name: 'Get Vault Keys'
+description: "Get the secret keys from Hashicorp's Vault"
+inputs:
+  secret_keys:
+    description: 'The secret KEY=VALUE'
+    required: true
+  task_definition_template_path:
+    description: 'The path to the task_definition_template.json file'
+    required: true
+outputs:
+  secrets: # id of output
+    description: 'The secrets in K=V format'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
