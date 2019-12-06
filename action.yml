@@ -1,15 +1,12 @@
-name: 'Get Vault Keys'
-description: "Get the secret keys from Hashicorp's Vault"
+name: 'Generate Task definition'
+description: "Update the environment variables section in the task_definition template"
 inputs:
-  secret_keys:
-    description: 'The secret KEY=VALUE'
-    required: true
   task_definition_template_path:
     description: 'The path to the task_definition_template.json file'
     required: true
 outputs:
-  secrets: # id of output
-    description: 'The secrets in K=V format'
+  task_definition:
+    description: 'The formatted data to go in task_definiton file'
 runs:
   using: 'node12'
   main: 'dist/index.js'
