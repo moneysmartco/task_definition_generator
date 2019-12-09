@@ -34,7 +34,7 @@ module.exports =
 /******/ 	// the startup function
 /******/ 	function startup() {
 /******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(909);
+/******/ 		return __webpack_require__(622);
 /******/ 	};
 /******/
 /******/ 	// run startup
@@ -50,7 +50,7 @@ module.exports = require("os");
 
 /***/ }),
 
-/***/ 186:
+/***/ 215:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
 "use strict";
@@ -123,14 +123,62 @@ function escape(s) {
 
 /***/ }),
 
-/***/ 622:
+/***/ 277:
 /***/ (function(module) {
 
 module.exports = require("path");
 
 /***/ }),
 
-/***/ 648:
+/***/ 622:
+/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
+
+const core = __webpack_require__(827);
+const fs = __webpack_require__(747);
+const path = __webpack_require__(277);
+
+// Get the task_definition file contents
+let taskDefinitionFilePath = core.getInput('task_definition_template_path');
+
+const taskDefinitionFile = path.isAbsolute(taskDefinitionFilePath) ?
+  taskDefinitionFilePath : path.join(process.env.GITHUB_WORKSPACE, taskDefinitionFilePath);
+
+if ( !fs.existsSync(taskDefinitionFile) ) {
+  throw new Error(`Task definition file does not exist: ${taskDefinitionFile}`);
+}
+const taskDefContents = require(taskDefinitionFile);
+
+// Format env vars for task definition file
+let envVarStringArray = core.getInput('secret_keys').split("\n");
+envVarStringArray.splice(-1); // remove empty string element from the end
+
+const secretKeys = envVarStringArray.map( (envVar) => {
+  let splitEnvVar = envVar.split("=");
+
+  if ( ['true', 'false'].includes(splitEnvVar[1]) ) {
+    splitEnvVar[1] = splitEnvVar[1] == 'true';
+  }
+
+  return { "name": splitEnvVar[0], "value": splitEnvVar[1] };
+});
+
+// Replace 'environment' key in task_definition with parsed values from Vault
+taskDefContents.containerDefinitions[0].environment = secretKeys;
+
+// Output a new JSON response
+core.setOutput('task_definition', JSON.stringify(taskDefContents));
+
+
+/***/ }),
+
+/***/ 747:
+/***/ (function(module) {
+
+module.exports = require("fs");
+
+/***/ }),
+
+/***/ 827:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
 "use strict";
@@ -145,9 +193,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const command_1 = __webpack_require__(186);
+const command_1 = __webpack_require__(215);
 const os = __webpack_require__(87);
-const path = __webpack_require__(622);
+const path = __webpack_require__(277);
 /**
  * The code to exit an action
  */
@@ -329,57 +377,6 @@ function getState(name) {
 }
 exports.getState = getState;
 //# sourceMappingURL=core.js.map
-
-/***/ }),
-
-/***/ 747:
-/***/ (function(module) {
-
-module.exports = require("fs");
-
-/***/ }),
-
-/***/ 909:
-/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
-
-// TODO compile packages and this script to the big file
-// https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-a-javascript-action
-
-const core = __webpack_require__(648);
-const fs = __webpack_require__(747);
-const path = __webpack_require__(622);
-
-// Get the task_definition file contents
-let taskDefinitionFilePath = core.getInput('task_definition_template_path');
-
-const taskDefinitionFile = path.isAbsolute(taskDefinitionFilePath) ?
-  taskDefinitionFilePath : path.join(process.env.GITHUB_WORKSPACE, taskDefinitionFilePath);
-
-if ( !fs.existsSync(taskDefinitionFile) ) {
-  throw new Error(`Task definition file does not exist: ${taskDefinitionFile}`);
-}
-const taskDefContents = require(taskDefinitionFile);
-
-// Format env vars for task definition file
-let envVarStringArray = core.getInput('secret_keys').split("\n");
-envVarStringArray.splice(-1); // remove empty string element from the end
-
-const secretKeys = envVarStringArray.map( (envVar) => {
-  let splitEnvVar = envVar.split("=");
-
-  if ( ['true', 'false'].includes(splitEnvVar[1]) ) {
-    splitEnvVar[1] = splitEnvVar[1] == 'true';
-  }
-
-  return { "name": splitEnvVar[0], "value": splitEnvVar[1] };
-})
-
-// Replace 'environment' key in task_definition with parsed values from Vault
-taskDefContents.containerDefinitions[0].environment = secretKeys;
-
-// Output a new JSON response
-core.setOutput('task_definition', JSON.stringify(taskDefContents));
-
 
 /***/ })
 

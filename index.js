@@ -1,6 +1,3 @@
-// TODO compile packages and this script to the big file
-// https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-a-javascript-action
-
 const core = require('@actions/core');
 const fs = require('fs');
 const path = require('path');
@@ -28,7 +25,7 @@ const secretKeys = envVarStringArray.map( (envVar) => {
   }
 
   return { "name": splitEnvVar[0], "value": splitEnvVar[1] };
-})
+});
 
 // Replace 'environment' key in task_definition with parsed values from Vault
 taskDefContents.containerDefinitions[0].environment = secretKeys;

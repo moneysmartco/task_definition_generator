@@ -4,6 +4,9 @@ inputs:
   task_definition_template_path:
     description: 'The path to the task_definition_template.json file'
     required: true
+  secret_keys:
+    description: 'The secret keys coming from vault'
+    required: true
 outputs:
   task_definition:
     description: 'The formatted data to go in task_definiton file'
