@@ -1,6 +1,9 @@
 name: 'Generate Task definition'
 description: "Update the environment variables section in the task_definition template"
 inputs:
+  container_name:
+    description: 'containerDefinitions name'
+    required: true
   task_definition_template_path:
     description: 'The path to the task_definition_template.json file'
     required: true
