@@ -16,7 +16,7 @@ try {
   const taskDefContents = require(taskDefinitionFile);
 
   // Format env vars for task definition file
-  let envVarStringArray = core.getInput('secret_keys').split("\n");
+  let envVarStringArray = core.getInput('secret_keys').split("\\n");
   core.debug(envVarStringArray)
   console.log(envVarStringArray)
 
