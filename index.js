@@ -18,10 +18,12 @@ try {
   // Format env vars for task definition file
   let envVarStringArray = core.getInput('secret_keys').split("\n");
   core.debug(envVarStringArray)
+  console.log(envVarStringArray)
 
   envVarStringArray.splice(-1); // remove empty string element from the end
 
   core.debug(envVarStringArray)
+  console.log(envVarStringArray)
 
   const secretKeys = envVarStringArray.map( (envVar) => {
     let splitEnvVar = envVar.split("=");
@@ -35,13 +37,16 @@ try {
 
   // Replace 'environment' key in task_definition with parsed values from Vault
   core.debug(secretKeys)
+  console.log(secretKeys)
   taskDefContents.containerDefinitions[0].environment = secretKeys;
 
+  console.log(taskDefContents.containerDefinitions[0].environment)
   // replace 'name' key in task definition with name set in github action
   taskDefContents.containerDefinitions[0].name = containerName;
 
   // Output a new JSON response
   core.debug(taskDefContents)
+  console.log(taskDefContents)
   core.setOutput('task_definition', JSON.stringify(taskDefContents));
 } catch (error) {
   core.setFailed(error.message);
