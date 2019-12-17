@@ -23,7 +23,7 @@ try {
 
   const secretKeys = envVarStringArray.map( (envVar) => {
     let splitEnvVar = envVar.split("=");
-    return { "name": splitEnvVar[0], "value": splitEnvVar[1] };
+    return { "name": splitEnvVar[0].replace('"', ''), "value": splitEnvVar[1] };
   });
 
   // Replace 'environment' key in task_definition with parsed values from Vault
