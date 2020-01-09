@@ -7,6 +7,9 @@ inputs:
   task_definition_template_path:
     description: 'The path to the task_definition_template.json file'
     required: true
+  family:
+    description: 'Task Definition Family name'
+    required: true
   secret_keys:
     description: 'The secret keys coming from vault'
     required: true
