@@ -16,14 +16,16 @@ try {
   }
   const taskDefContents = require(taskDefinitionFile);
 
-  console.log("secret_keys_json", core.getInput('secret_keys_json'))
+  core.debug(`secret_keys_json -  ${core.getInput('secret_keys_json')}`);
 
   let secretsObject = JSON.parse(core.getInput('secret_keys_json'))
 
-  console.log("secretsObject", secretsObject)
+  core.debug(`secretsObject -  ${secretsObject}`);
+
   const secretKeys = Object.keys(secretsObject).map (k => { return {"name": k, "value" : secretsObject[k]} } )
 
-  console.log("secretKeys", secretKeys)
+  core.debug(`secretKeys -  ${secretKeys}`);
+
   // Replace 'family' key in task_definition with family set in github action
   taskDefContents.family = family;
 
