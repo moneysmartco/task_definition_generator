@@ -16,16 +16,8 @@ try {
   }
   const taskDefContents = require(taskDefinitionFile);
 
-  // Format env vars for task definition file
-  let envVarStringArray = core.getInput('secret_keys').split("\\n");
-  core.debug(envVarStringArray)
-
-  envVarStringArray.splice(-1); // remove empty string element from the end
-
-  const secretKeys = envVarStringArray.map( (envVar) => {
-    let splitEnvVar = envVar.split("=");
-    return { "name": splitEnvVar[0].replace('"', ''), "value": splitEnvVar[1] };
-  });
+  let secrets_json = JSON.parse(core.getInput('secret_keys_json'))
+  const secretKeys = Object.keys(secrets_json).map (k => { return {"name": k, "value" : secrets_json[k]} } )
 
   // Replace 'family' key in task_definition with family set in github action
   taskDefContents.family = family;
@@ -35,6 +27,10 @@ try {
 
   // replace 'name' key in task definition with name set in github action
   taskDefContents.containerDefinitions[0].name = containerName;
+
+  // Override cpu memory with vault values
+  taskDefContents.containerDefinitions[0].cpu = secrets_json.cpu || taskDefContents.containerDefinitions[0].cpu
+  taskDefContents.containerDefinitions[0].memory = secrets_json.cpu || taskDefContents.containerDefinitions[0].memory
 
   // Output a new JSON response
   console.log(taskDefContents)
