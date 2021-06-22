@@ -153,7 +153,7 @@ try {
 
   let secretsObject = JSON.parse(core.getInput('secret_keys_json'))
 
-  const secretKeys = Object.keys(secretsObject).map (k => { return {"name": k, "value" : secretsObject[k]} } )
+  const secretKeys = Object.keys(secretsObject).map (k => { return {"name": k, "value" : secretsObject[k].toString()} } )
 
   // Replace 'family' key in task_definition with family set in github action
   taskDefContents.family = family;
@@ -165,8 +165,12 @@ try {
   taskDefContents.containerDefinitions[0].name = containerName;
 
   // Override cpu memory with vault values
-  taskDefContents.containerDefinitions[0].cpu = secretsObject.cpu || taskDefContents.containerDefinitions[0].cpu
-  taskDefContents.containerDefinitions[0].memory = secretsObject.cpu || taskDefContents.containerDefinitions[0].memory
+  if (secretsObject.cpu) {
+    taskDefContents.containerDefinitions[0].cpu = secretsObject.cpu.toString() || taskDefContents.containerDefinitions[0].cpu
+  }
+  if (secretsObject.memory) {
+    taskDefContents.containerDefinitions[0].memory = secretsObject.memory.toString() || taskDefContents.containerDefinitions[0].memory
+  }
 
   // Output a new JSON response
   console.log(taskDefContents)
