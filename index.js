@@ -16,7 +16,7 @@ try {
   }
   const taskDefContents = require(taskDefinitionFile);
 
-  let secrets_json = JSON.parse(core.getInput('secret_keys_json'))
+  let secrets_json = JSON.parse(core.getInput('secret_keys'))
   const secretKeys = Object.keys(secrets_json).map (k => { return {"name": k, "value" : secrets_json[k]} } )
 
   // Replace 'family' key in task_definition with family set in github action

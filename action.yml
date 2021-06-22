@@ -11,7 +11,7 @@ inputs:
     description: 'Task Definition Family name'
     required: true
   secret_keys:
-    description: 'The secret keys coming from vault'
+    description: 'The secret keys coming from vault in json format'
     required: true
 outputs:
   task_definition:
