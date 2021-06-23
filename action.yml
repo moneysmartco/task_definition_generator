@@ -10,8 +10,8 @@ inputs:
   family:
     description: 'Task Definition Family name'
     required: true
-  secret_keys:
-    description: 'The secret keys coming from vault'
+  secret_keys_json:
+    description: 'The secret keys coming from vault in json format'
     required: true
 outputs:
   task_definition:
